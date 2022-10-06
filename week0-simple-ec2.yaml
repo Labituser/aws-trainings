@@ -1,0 +1,40 @@
+# aws cloudformation create-stack --stack-name ec2stack --template-body file://week0-simple-ec2.yaml --region us-east-1
+# aws cloudformation describe-stacks --stack-name ec2stack --region us-east-1
+# aws cloudformation delete-stack --stack-name ec2stack --region us-east-1
+
+AWSTemplateFormatVersion: 2010-09-09
+Description: First EC2 instance
+
+Parameters: 
+  EC2InstanceType:
+    Description: The instance type of EC2
+    Type: String
+    Default: t2.micro
+    AllowedValues: 
+      - t2.micro
+      - t2.nano
+      - t2.small
+      - t2.medium
+      - t2.large
+
+  EC2ImageId:
+    Description: The ID of the AMI. An AMI ID is required to launch an instance and must be specified.
+    Type: String
+    Default: ami-026b57f3c383c2eec
+    AllowedValues: 
+      - ami-026b57f3c383c2eec
+      - ami-08c40ec9ead489470
+      - ami-0f1ee03d06c4c659c
+
+Resources:
+  myEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref EC2ImageId
+      InstanceType: !Ref EC2InstanceType
+      Monitoring: false
+
+Outputs:
+  EC2Ip:
+    Description: EC2 Instance Public Ip
+    Value: !GetAtt myEC2Instance.PublicIp
